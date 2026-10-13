@@ -30,7 +30,7 @@
     };
     root.appendChild(h('div', { class: 'login' },
       h('div', { class: 'card stack gap20', style: 'width:100%;max-width:420px;padding:32px' },
-        h('img', { src: '/img/logo-pos.svg', alt: 'Generasjon M', style: 'height:26px;align-self:flex-start' }),
+        h('a', { href: '/', 'aria-label': 'Til forsiden', style: 'align-self:flex-start' }, h('img', { src: '/img/logo-pos.svg', alt: 'Generasjon M', style: 'height:26px;display:block' })),
         h('h1', { class: 'display h1', text: 'Admin' }),
         h('p', { class: 'muted', style: 'margin:0;line-height:1.5', text: 'Logg inn med Google-kontoen din fra Generasjon M (@' + DOMENE + '). Bare godkjente administratorer får tilgang.' }),
         feil ? h('div', { class: 'error', role: 'alert', text: feil }) : null,
