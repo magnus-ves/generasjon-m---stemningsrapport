@@ -2,7 +2,7 @@
 window.GM_CONFIG = {
   supabaseUrl: 'https://kkjfgejwgjhmxcdvtjii.supabase.co',
   supabaseKey: 'sb_publishable_QGBW0knWwKDloGeKDdEP4Q_hHrUtJSO',
-  adminDomene: 'generajsonm.no',
+  adminDomene: 'generasjonm.no',
   // Auth0 (offentlige verdier fra Auth0-appens Settings). Ingen client secret i en nettleserapp.
   auth0Domain: '',
   auth0ClientId: ''
