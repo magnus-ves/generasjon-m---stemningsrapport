@@ -125,7 +125,8 @@
     var form = h('form', { class: 'stack gap20' },
       tittel('Velkommen', 'Skriv inn koden for stedet du besøker. Du får den av teamlederen. Koden huskes på denne telefonen.'),
       h('label', { class: 'field' }, 'Stedskode', inp), feil,
-      h('button', { type: 'submit', class: 'btn blue' }, 'Fortsett'));
+      h('button', { type: 'submit', class: 'btn blue' }, 'Fortsett'),
+      h('p', { class: 'small muted', style: 'margin:0;line-height:1.5' }, 'Svarene lagres sikkert og leses bare av administratorer. ', h('a', { href: '/personvern.html', text: 'Les personvernerklæringen' })));
     form.onsubmit = function (e) {
       e.preventDefault();
       var kode = inp.value.trim().toUpperCase();
@@ -223,7 +224,7 @@
       h('fieldset', null, h('legend', { text: 'Da vi dro' }), fjes('stemning_etter')),
       loft,
       h('div', { class: 'stack gap10' }, h('span', { style: 'font-size:15px;font-weight:700' }, 'Hva så dere? ', h('span', { class: 'muted', style: 'font-weight:500', text: 'Velg alle som passer' })), chips(SIGNALER, 'signaler')),
-      tekstfelt('Dagens generasjonsmøte', 'dagens_generasjonsmote', { rader: 4, max: 2000, hint: 'Trekk frem ett møte mellom en M-venn og en beboer. Det løftes frem i oppsummeringen. Ikke bruk navn.', placeholder: 'Hva skjedde, hvem tok initiativ, hvordan endret det rommet …' })));
+      tekstfelt('Dagens generasjonsmøte', 'dagens_generasjonsmote', { rader: 4, max: 2000, hint: 'Trekk frem ett møte mellom en M-venn og en beboer. Det løftes frem i oppsummeringen. Ikke skriv navn eller helseopplysninger.', placeholder: 'Hva skjedde, hvem tok initiativ, hvordan endret det rommet …' })));
     oppdater();
     knapper([tilbake(), neste(function () {
       return !S.r.stemning_for || !S.r.stemning_etter ? 'Velg stemning både da dere kom og da dere dro.' : '';
@@ -306,7 +307,7 @@
         h('div', { class: 'row small muted', style: 'justify-content:space-between;margin-top:6px;font-size:12px' }, h('span', { text: 'Svært dårlig' }), h('span', { text: 'Svært godt' }))),
       tekstfelt('Hva tar du med deg til neste besøk?', 'neste_gang', { rader: 3, max: 2000 }),
       h('div', { class: 'stack gap10' }, h('span', { style: 'font-size:15px;font-weight:700' }, 'Noe å melde fra om? ', h('span', { class: 'muted', style: 'font-weight:500', text: 'Valgfritt' })), chips(AVVIK, 'avvik')),
-      tekstfelt('Kommentar', 'kommentar', { rader: 3, max: 2000 })));
+      tekstfelt('Kommentar', 'kommentar', { rader: 3, max: 2000, hint: 'Ikke skriv navn eller helseopplysninger om beboere.' })));
     knapper([tilbake(), send]);
   }
 

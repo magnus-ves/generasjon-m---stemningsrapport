@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000057">
+<title>Personvernerklæring – Generasjon M</title>
+<link rel="icon" href="/img/logo-pos.svg">
+<link rel="stylesheet" href="/style.css">
+<style>
+  .doc{max-width:760px;margin:0 auto;padding:24px 20px 64px}
+  .doc h1{font-weight:900;text-transform:uppercase;line-height:1;font-size:clamp(32px,6vw,48px);margin:28px 0 8px}
+  .doc h2{font-size:20px;font-weight:800;margin:36px 0 10px}
+  .doc p,.doc li{font-size:16px;line-height:1.65}
+  .doc ul{padding-left:22px}
+  .doc table{margin:8px 0}
+  .doc td,.doc th{font-size:14px}
+  .ph{background:var(--yellow);padding:0 4px;border-radius:4px;font-weight:600}
+</style>
+</head>
+<body>
+<main class="doc">
+  <a href="/" aria-label="Til forsiden"><img src="/img/logo-pos.svg" alt="Generasjon M" style="height:22px;display:block"></a>
+  <h1>Personvern&shy;erklæring</h1>
+  <p class="muted">Gjelder stemningsrapporten for Generasjon M. Sist oppdatert 13. oktober 2026.</p>
+
+  <h2>Hvem er ansvarlig</h2>
+  <p>Generasjon M <span class="ph">[organisasjonsnummer]</span> er behandlingsansvarlig for opplysningene som samles inn her. Spørsmål om personvern sendes til <span class="ph">[e-postadresse for personvern]</span>.</p>
+
+  <h2>Hvilke opplysninger vi samler inn, og hvorfor</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Hvem</th><th>Opplysninger</th><th>Formål</th></tr></thead>
+    <tbody>
+      <tr><td>Besøksleder</td><td>Navn, dato, besøkssted og svarene i rapporten (antall møter, stemning, mål, utfordring, kommentarer).</td><td>Dokumentere og forbedre besøkene, og rapportere effekten til kommunen.</td></tr>
+      <tr><td>Beboere</td><td>Ingen navn eller personopplysninger. Rapporten teller bare antall, og fritekst skal skrives uten navn eller helseopplysninger.</td><td>Måle effekten av besøkene samlet.</td></tr>
+      <tr><td>Administratorer</td><td>Navn og e-postadresse fra Google-kontoen, og tidspunkt for innlogging.</td><td>Sikre at bare godkjente personer får se rapportene.</td></tr>
+      <tr><td>Alle besøkende</td><td>IP-adresse og nettlesertype i tekniske logger hos leverandørene våre.</td><td>Drift, feilsøking og å stoppe misbruk.</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>Rettslig grunnlag:</b> Behandlingen bygger på vår berettigede interesse i å følge opp og dokumentere frivillighetsarbeidet og oppdraget for kommunen (personvernforordningen artikkel 6 nr. 1 bokstav f). <span class="ph">[Bekreft grunnlaget, eventuelt avtale med kommunen]</span></p>
+
+  <h2>Informasjonskapsler og lokal lagring</h2>
+  <p>Vi bruker <b>ingen</b> sporing, analyse eller markedsføring, og derfor heller ikke noe samtykkebanner. Siden lagrer bare det som er strengt nødvendig for at den skal virke:</p>
+  <ul>
+    <li><b>Stedskoden</b> og <b>navnet på besøkslederen</b> lagres i nettleseren på telefonen, så du slipper å skrive dem hver gang. Trykk «Bytt sted» for å fjerne koden.</li>
+    <li><b>Innloggingen for administratorer</b> (Auth0) bruker nødvendige informasjonskapsler for å holde deg innlogget.</li>
+  </ul>
+
+  <h2>Hvor lenge vi lagrer opplysningene</h2>
+  <ul>
+    <li>Rapporter lagres i <span class="ph">[3 år]</span> etter besøket. Deretter slettes de, eller navnet på besøksleder fjernes.</li>
+    <li>Administratortilgang fjernes når personen ikke lenger har rollen.</li>
+    <li>Tekniske logger slettes automatisk av leverandørene, normalt innen 90 dager.</li>
+  </ul>
+
+  <h2>Hvem vi deler med</h2>
+  <p>Vi selger aldri opplysninger. Oppsummeringer uten navn på beboere sendes til <span class="ph">[kommunen]</span>. Disse leverandørene behandler opplysninger på våre vegne, og vi har databehandleravtale med hver av dem:</p>
+  <ul>
+    <li><b>Supabase</b> – database. Lagret i EU (Stockholm).</li>
+    <li><b>Vercel</b> – drift av nettsiden.</li>
+    <li><b>Auth0 (Okta)</b> – innlogging for administratorer, EU-region.</li>
+    <li><b>Google</b> – kontoen administratorer logger inn med.</li>
+  </ul>
+  <p>Noen av leverandørene er amerikanske selskaper. Overføringer til USA skjer etter EU–US Data Privacy Framework eller EUs standard personvernbestemmelser.</p>
+
+  <h2>Sikkerhet</h2>
+  <p>All trafikk er kryptert (HTTPS). Rapportene kan bare leses av godkjente administratorer, og tilgangen kontrolleres i databasen. M-venner kan sende inn rapporter, men ikke lese dem. Stedskoder lagres kryptert.</p>
+
+  <h2>Dine rettigheter</h2>
+  <p>Du har rett til innsyn i opplysningene om deg, og til å få dem rettet eller slettet. Du kan også be om begrenset behandling eller protestere mot behandlingen. Kontakt oss på <span class="ph">[e-postadresse for personvern]</span>, så svarer vi innen 30 dager.</p>
+  <p>Mener du at vi behandler opplysninger i strid med regelverket, kan du klage til <a href="https://www.datatilsynet.no/">Datatilsynet</a>.</p>
+</main>
+</body>
+</html>

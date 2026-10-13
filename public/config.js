@@ -2,10 +2,14 @@
 window.GM_CONFIG = {
   supabaseUrl: 'https://kkjfgejwgjhmxcdvtjii.supabase.co',
   supabaseKey: 'sb_publishable_QGBW0knWwKDloGeKDdEP4Q_hHrUtJSO',
-  adminDomene: 'generajsonm.no'
+  adminDomene: 'generajsonm.no',
+  // Auth0 (offentlige verdier fra Auth0-appens Settings). Ingen client secret i en nettleserapp.
+  auth0Domain: '',
+  auth0ClientId: ''
 };
+// Klient for M-venner (ingen innlogging). Admin-siden lager sin egen klient med Auth0-token.
 window.gm = window.supabase.createClient(window.GM_CONFIG.supabaseUrl, window.GM_CONFIG.supabaseKey, {
-  auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' }
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
 });
 
 // Trygg DOM-bygging: all tekst settes som textContent, aldri som HTML.

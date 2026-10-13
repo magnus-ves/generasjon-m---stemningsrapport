@@ -20,41 +20,78 @@
   }
   function melding(el, tekst, type) { el.textContent = tekst; el.className = type === 'ok' ? 'ok' : 'error'; el.classList.remove('hidden'); }
 
-  // ---------- Innlogging ----------
+  // ---------- Innlogging (Auth0) ----------
+  var auth0Client = null;
+  var REDIRECT = location.origin + '/admin.html';
+
+  function idToken() {
+    return auth0Client.getIdTokenClaims().then(function (c) { return c ? c.__raw : null; });
+  }
+
   function visLogin(feil) {
     root.textContent = '';
-    var btn = h('button', { type: 'button', class: 'btn blue', style: 'width:100%' }, 'Logg inn med Google');
+    var klar = !!(GM_CONFIG.auth0Domain && GM_CONFIG.auth0ClientId);
+    var btn = h('button', { type: 'button', class: 'btn blue', style: 'width:100%', disabled: !klar }, 'Logg inn med Google');
     btn.onclick = function () {
       btn.disabled = true;
-      gm.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + '/admin.html', queryParams: { hd: DOMENE, prompt: 'select_account' } } });
+      auth0Client.loginWithRedirect({ authorizationParams: { connection: 'google-oauth2', prompt: 'select_account' } });
     };
+    if (!klar) feil = feil || 'Innloggingen er ikke satt opp ennå (Auth0-domene og Client ID mangler i config.js).';
     root.appendChild(h('div', { class: 'login' },
       h('div', { class: 'card stack gap20', style: 'width:100%;max-width:420px;padding:32px' },
         h('a', { href: '/', 'aria-label': 'Til forsiden', style: 'align-self:flex-start' }, h('img', { src: '/img/logo-pos.svg', alt: 'Generasjon M', style: 'height:26px;display:block' })),
         h('h1', { class: 'display h1', text: 'Admin' }),
         h('p', { class: 'muted', style: 'margin:0;line-height:1.5', text: 'Logg inn med Google-kontoen din fra Generasjon M (@' + DOMENE + '). Bare godkjente administratorer får tilgang.' }),
         feil ? h('div', { class: 'error', role: 'alert', text: feil }) : null,
-        btn)));
+        btn,
+        h('a', { href: '/personvern.html', class: 'small', style: 'color:var(--muted)', text: 'Personvernerklæring' }))));
+  }
+
+  function loggUt() {
+    A.bruker = null;
+    auth0Client.logout({ logoutParams: { returnTo: location.origin } });
   }
 
   function start() {
-    gm.auth.getSession().then(function (r) {
-      var s = r.data.session;
-      if (!s) return visLogin();
-      A.bruker = s.user;
-      gm.rpc('is_admin').then(function (res) {
-        if (res.error || res.data !== true) {
-          var epost = s.user.email || '';
-          gm.auth.signOut().then(function () {
-            visLogin('Kontoen ' + epost + ' har ikke tilgang. Bruk en godkjent konto på @' + DOMENE + ', eller be en administrator legge deg til.');
+    if (!GM_CONFIG.auth0Domain || !GM_CONFIG.auth0ClientId || !window.auth0) return visLogin();
+    window.auth0.createAuth0Client({
+      domain: GM_CONFIG.auth0Domain,
+      clientId: GM_CONFIG.auth0ClientId,
+      useRefreshTokens: true,
+      cacheLocation: 'memory',
+      authorizationParams: { redirect_uri: REDIRECT, scope: 'openid profile email offline_access' }
+    }).then(function (c) {
+      auth0Client = c;
+      var q = new URLSearchParams(location.search);
+      var steg = (q.has('code') || q.has('error')) && q.has('state')
+        ? auth0Client.handleRedirectCallback().catch(function (e) { return { feil: e }; }).then(function (r) { history.replaceState({}, document.title, location.pathname); return r; })
+        : Promise.resolve(null);
+      return steg.then(function (r) {
+        if (r && r.feil) return visLogin('Innloggingen ble avbrutt eller feilet. Prøv igjen.');
+        return auth0Client.isAuthenticated().then(function (inne) {
+          if (!inne) return visLogin();
+          return auth0Client.getUser().then(function (u) {
+            A.bruker = u;
+            // Supabase-klient som sender Auth0 ID-token. Databasens regler sjekker token, admin-liste og domene.
+            window.gm = window.supabase.createClient(GM_CONFIG.supabaseUrl, GM_CONFIG.supabaseKey, {
+              accessToken: function () { return auth0Client.getTokenSilently().then(idToken, idToken); }
+            });
+            return gm.rpc('is_admin').then(function (res) {
+              if (res.error || res.data !== true) {
+                var epost = (u && u.email) || '';
+                root.textContent = '';
+                visLogin('Kontoen ' + epost + ' har ikke tilgang. Bruk en godkjent konto på @' + DOMENE + ', eller be en administrator legge deg til.');
+                var ut = h('button', { type: 'button', class: 'btn ghost small', onclick: loggUt }, 'Logg ut og bytt konto');
+                root.querySelector('.card').appendChild(ut);
+                return;
+              }
+              return lastGrunndata().then(skall);
+            });
           });
-          return;
-        }
-        lastGrunndata().then(skall);
+        });
       });
-    });
+    }).catch(function () { visLogin('Kunne ikke kontakte innloggingstjenesten. Sjekk nettforbindelsen og prøv igjen.'); });
   }
-  gm.auth.onAuthStateChange(function (ev) { if (ev === 'SIGNED_OUT' && A.bruker) { A.bruker = null; visLogin(); } });
 
   function lastGrunndata() {
     return Promise.all([
@@ -87,7 +124,7 @@
         h('div', { class: 'stack gap4' }, tabKnapper),
         h('div', { class: 'stack gap8', style: 'margin-top:auto' },
           h('span', { class: 'small', style: 'color:#CDDFFF;word-break:break-all', text: A.bruker.email }),
-          h('button', { type: 'button', class: 'btn ghost small', style: 'align-self:flex-start;background:transparent;color:#fff;border-color:#6F8DFF', onclick: function () { gm.auth.signOut(); } }, 'Logg ut'))),
+          h('button', { type: 'button', class: 'btn ghost small', style: 'align-self:flex-start;background:transparent;color:#fff;border-color:#6F8DFF', onclick: loggUt }, 'Logg ut'))),
       h('main', { class: 'content' }, innhold)));
     ({ oversikt: visOversikt, besok: visBesok, oppsummeringer: visOppsummeringer, utfordring: visUtfordring, mal: visMal, steder: visSteder, admins: visAdmins })[A.tab]();
   }
